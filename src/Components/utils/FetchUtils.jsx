@@ -33,105 +33,45 @@ export class HttpApiMethods {
     return response.data;
   }
 
-
-
-  // 
-  //  Получение всех мероприятий
-  // 
-  GetUsers = async (limit, offset) => {
-    let innerUrl = this.APIURL + `/members/user/?limit=${limit}&offset=${offset}`;
+  GetUser = async (id) => {
+    let innerUrl = this.APIURL + `/members/user/${id}/`;
 
     const response = await axios.get(innerUrl, {
-      Authorization: `Bearer ${this.token}`
-   }, {
+      
       headers: {
         'Content-Type': 'application/json',
-        
+        'Authorization': `Bearer ${this.token}`
       }
    });
     return response.data;
   }
+
   
-  // Создание мероприятия
-  AddMeetings = async (data) => {
-    let innerUrl = this.APIURL + `/meetings`;
+  GetUsers = async (limit, offset) => {
+    let innerUrl = this.APIURL + `/members/user/?limit=${limit}&offset=${offset}`;
 
-    let response = await axios.postForm(innerUrl, data); //
-    return response.data;
-
-  }
-  // Редактирование уже существующего мероприятия
-  EditMeetings = async (data) => {
-    let innerUrl = this.APIURL + `/meetings`;
-    let response = await axios.putForm(innerUrl, data); //
+    const response = await axios.get(innerUrl, {
+      
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.token}`
+      }
+   });
     return response.data;
   }
-
-  // Удалить мероприятие, пока что не реализовано
-  DeleteMeetings = async (id) => {
-    let innerUrl = this.APIURL + `/meetings?id=${id}`
-
-    const response = await axios.get(innerUrl) //
-
+  SetNewUser = async (userData) => {
+    let innerUrl = this.APIURL + `/members/user/`;
+    console.log(userData);
+   const response = await axios.post(innerUrl, userData, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+    }
+  });
+  console.log(response.data)
     return response.data;
   }
-
-
-
-  // 
-  // Users
-  // 
+  
  
 }
 
-
-
-
-
-const FetchUtils = async () => {
-  const httpApiMethods = new HttpApiMethods() // Создание экземпляра класса HttpApiMethods
-
-  const meets = await httpApiMethods.GetMeetings()
-  const [user, setUser] = useState([])
-
-  // async function getData() {
-    // const response = await axios.get()
-    // console.log(response.data)
-    // setUser(response.data)
-  // }
-
-  const removeList = () => {
-    setUser([])
-  }
-
-  return (
-    <>
-
-      <button onClick={removeList}>Click to Remove Data Listing</button>
-      {/* Mapping of data */}
-      <div>
-        {Array.isArray(meets) ? (
-          <ul>
-            {meets.map((item) => (
-              <ol key={item.id}>
-                <li>{item.title}</li>
-                <li>{item.time}</li>
-                <li>{item.speakerName}</li>
-                <li>{item.speackerImage}</li>
-                <li>{item.splecializations}</li>
-                <li>{item.type}</li>
-                <li>{item.speakerTelephone}</li>
-                <li>{item.speakerEmail}</li>
-                <li>{item.tags}</li>
-                <li>{item.videoUrl}</li>
-              </ol>
-            ))}
-          </ul>
-        ) : (
-          <p>Bad data type from server!</p>
-        )}
-      </div>
-    </>
-  );
-}
-export default FetchUtils;

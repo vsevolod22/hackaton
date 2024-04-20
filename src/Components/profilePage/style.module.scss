@@ -1,5 +1,12 @@
 
-
+@keyframes rotation {
+    0% {
+      transform: rotate(0deg); /* Начальное состояние: 0 градусов */
+   }
+    100% {
+      transform: rotate(360deg); /* Конечное состояние: 360 градусов */
+   }
+  }
 
 .profile {
 
@@ -363,4 +370,8 @@
         background-color: #000;
         margin-bottom: 20px;
     }
+}
+.loading__img {
+    display: inline-block; 
+    animation: rotation 2s linear infinite; 
 }

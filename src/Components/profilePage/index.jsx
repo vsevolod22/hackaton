@@ -1,12 +1,42 @@
 import Header from "../Header";
 import styles from "./style.module.scss"
 import avatar from '../../img/profilePage/avatar.png';
-
+import loadingGif from '../../img/AddUsers/loading.png';
+import { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom';
 // import Users from "../post/Users";
 // import EditMeetsForm from "../edit/EditMeetsForm";
 // import PostForm from "../post/Meets";
 // import Home from '../Home/Home';
+import { HttpApiMethods } from '../utils/FetchUtils';
+const httpApiMethods = new HttpApiMethods()
 const ProfilePage = () => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const { id: urlId } = useParams();
+    const GetUser = async (id) => {
+
+        setLoading(true);
+        const response = await httpApiMethods.GetUser(id);
+        setUser(response);
+        console.log(response);
+        setLoading(false);
+        
+        // Расчет общего количества страниц
+    
+    
+    }
+    useEffect(() => {
+        
+            if (urlId !== 'null' && urlId) {
+                console.log(urlId);
+             
+                GetUser(urlId)
+            }
+            
+        
+      
+    }, [urlId])
     const users = [
         {
             id: 1,
@@ -39,21 +69,29 @@ const ProfilePage = () => {
     return (
         <>
             <Header></Header>
-            <section className={styles.profile__container}>
+            {user && !loading ? <section className={styles.profile__container}>
                 <div className={styles.profile__user_container}>
                     <div className={styles.profile__user_img_container}>
                         <img src={avatar} className={styles.profile__user_img}></img>
-                        <div className={styles.profile__user_role}>Участник</div>
+                        {user.groups.name ? <div className={styles.profile__user_role}>{user.groups[0].name}</div> : <div className={styles.profile__user_role}>Пользователь</div>}
+                        
                     </div>
                     <div className={styles.profile__user_info_container}>
-                        <div className={styles.profile__user_fullName}><span>К</span>ирсанов Дмитрий </div>
-                        <div className={styles.profile__user_spaciality}>Junior PHP разработчик</div>
-                        <div className={styles.profile__user_email}>gmail@gmail.com</div>
+                        <div className={styles.profile__user_fullName}><span>{user.last_name[0]}</span>{user.last_name.slice(1)} {user.first_name}</div>
+                        <div className={styles.profile__user_spaciality}>{user.position}</div>
+                        <div className={styles.profile__user_email}>{user.email}</div>
+                        <div className={styles.profile__user_email}>{user.time_preference}</div>
                     
                     </div>
                 </div>
                 
-            </section>
+            </section> : <section className={styles.profile__container}>
+                <div className={styles.profile__user_container}>
+                    <img className={styles.loading__img} src={loadingGif} alt='loading'></img>
+                </div>
+                
+            </section>}
+           
             <section className={styles.myMeets}>
                 <div className={styles.myMeets__title}>Ваши встречи</div>
                 <div className={styles.meeting__container}>

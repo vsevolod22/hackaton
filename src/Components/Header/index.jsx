@@ -68,6 +68,7 @@ const Header = () => {
             // Успешный вход
             const user = result.user;
             setUser(user);
+            console.log(user);
             // Здесь можно перенаправить пользователя или обновить состояние компонента
           })
           .catch((error) => {
@@ -75,18 +76,17 @@ const Header = () => {
             console.error(error);
           });
      };
-    const isAuth = useState(true)[0];
-    console.log(isAuth)
+    
 
 
     return (
         <>
-            {(isAuth ? (
+            {(localStorage.getItem('token') ? (
             <div className={styles.header__container}>
             <header className={styles.header}>
                 <div className={styles.header__logo} onClick={handleHome} ><img onClick={handleHome} src={logo} alt="logo"></img></div>
                 <div className={styles.header_img_container}>  <img className={styles.header_img} src={icon}></img> <Menu></Menu></div>
-                <button onClick={signInWithGoogle}>Войти через Google</button>
+                
             </header>
         </div>
         ) :
@@ -94,7 +94,8 @@ const Header = () => {
             <div className={styles.header__container}>
                 <header className={styles.header}>
                     <div className={styles.header__logo} onClick={handleHome} ><img onClick={handleHome} src={logo} alt="logo"></img></div>
-                    <button className={styles.header__button}>ВХОД <img className={styles.header__button_img} src={google}></img></button>
+                    
+                    <button onClick={signInWithGoogle}>Войти через Google</button>
                 </header>
             </div>
         ))
