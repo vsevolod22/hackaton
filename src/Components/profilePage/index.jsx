@@ -44,25 +44,52 @@ const ProfilePage = () => {
             status: 'Встреча состоялась',
             date: '2017-01-12 18:00',
             time: '30 минут',
-            description: 'Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча',
+            description: 'Прикольная встреча',
      
          },
         {
             id: 2,
-            fullName: 'Кирсанов Дмитрий',
-            status: 'Встреча состоялась',
-            date: '2017-01-12 18:00',
-            time: '30 минут',
-            description: 'Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча',
+            fullName: 'Световой Владислав',
+            status: 'Встреча не состоялась',
+            date: '2020-03-10 12:00',
+            time: '15 минут',
+            description: 'Кайфово встретились',
      
          },
          {
             id: 3,
-            fullName: 'Кирсанов Дмитрий',
+            fullName: 'Астафьев Кирилл',
             status: 'Встреча состоялась',
-            date: '2017-01-12 18:00',
+            date: '2021-02-12 10:00',
             time: '30 минут',
-            description: 'Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча Самая лучшая встреча',
+            description: 'Нормалды',
+     
+         },
+         {
+            id: 4,
+            fullName: 'Данилов Николай',
+            status: 'Встреча состоялась',
+            date: '2021-04-12 16:30',
+            time: '30 минут',
+            description: 'Крутой чел',
+     
+         },
+        {
+            id: 5,
+            fullName: 'Борисова Вероника',
+            status: 'Встреча не состоялась',
+            date: '2022-01-12 11:00',
+            time: '15 минут',
+            description: 'Не свезло не встретелись',
+     
+         },
+         {
+            id: 6,
+            fullName: 'Князева Татьяна',
+            status: 'Встреча не состоялась',
+            date: '2019-01-12 18:00',
+            time: '30 минут',
+            description: 'Хороший разработчик, но не встетились',
      
          },
        ];
@@ -78,19 +105,17 @@ const ProfilePage = () => {
                     </div>
                     <div className={styles.profile__user_info_container}>
                         <div className={styles.profile__user_fullName}><span>{user.last_name[0]}</span>{user.last_name.slice(1)} {user.first_name}</div>
-                        <div className={styles.profile__user_spaciality}>{user.position}</div>
+                        {user.position && <div className={styles.profile__user_spaciality}>{user.position.name}</div>}
                         <div className={styles.profile__user_email}>{user.email}</div>
-                        <div className={styles.profile__user_email}>{user.time_preference}</div>
+                        <div className={styles.profile__user_email}>{user.time_preference} минут</div>
                     
                     </div>
                 </div>
                 
-            </section> : <section className={styles.profile__container}>
-                <div className={styles.profile__user_container}>
-                    <img className={styles.loading__img} src={loadingGif} alt='loading'></img>
-                </div>
+            </section> : 
+            <div className={styles.loading__img_container}><img className={styles.loading__img} src={loadingGif} alt='loading'></img></div>
                 
-            </section>}
+            }
            
             <section className={styles.myMeets}>
                 <div className={styles.myMeets__title}>Ваши встречи</div>

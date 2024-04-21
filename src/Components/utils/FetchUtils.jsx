@@ -15,7 +15,7 @@ export class HttpApiMethods {
   }
   // URL`s
   user_id = '17e5fc7a-8f22-4c0b-8b33-5dc3a6937561'
-  APIURL = "http://26.189.225.172:8000/api"
+  APIURL = "http://89.208.104.224:8000/api"
   APIURL_FILES = "https://cyberbloom.zetcraft.ru/api/cyber-boom-files/"
   // получение мероприятий по ID
   GetAuthUser = async (email) => {
@@ -40,7 +40,7 @@ export class HttpApiMethods {
       
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
+        'X-Authorization': `Bearer ${this.token}`
       }
    });
     return response.data;
@@ -54,7 +54,20 @@ export class HttpApiMethods {
       
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.token}`
+        'X-Authorization': `Bearer ${this.token}`
+      }
+   });
+    return response.data;
+  }
+  
+  GetPotihions = async () => {
+    let innerUrl = this.APIURL + `/members/position/`;
+
+    const response = await axios.get(innerUrl, {
+      
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': `Bearer ${this.token}`
       }
    });
     return response.data;
@@ -65,7 +78,7 @@ export class HttpApiMethods {
    const response = await axios.post(innerUrl, userData, {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
+      'X-Authorization': `Bearer ${this.token}`
     }
   });
   console.log(response.data)

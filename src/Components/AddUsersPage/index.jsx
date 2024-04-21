@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import Pedro from '../../img/AddUsers/loading.png';
 import avatar from '../../img/profilePage/avatar.png';
 import Header from '../Header';
 import Modal from '@mui/material/Modal';
@@ -26,28 +27,45 @@ const style = {
     p: 4,
   };
     const AddUsers = () => {
+        const [idPosition, setIdPosition] = useState('');
         const [formData, setFormData] = useState({
             username : '',
             first_name: '',
             last_name: '',
-            position: '',
+            position: idPosition,
             email: '',
             birth_date: ''
            });
         
         const [open, setOpen] = useState(false);
+        const [page, setPage] = useState(1);
         const [loading, setLoading] = useState(false);
         const [totalPages, setTotalPages] = useState(null);
         const [users, setUsers] = useState('');
+        const [positionName, setPositionName] = useState('');
         const [userRole, setUserRole] = useState('')
+        const [position, setPosition] = useState(null)
         const navigate = useNavigate();
+        
         const handleInputChange = (e) => {
             const { name, value } = e.target;
             if (name === 'email') {
               // Разделяем значение по символу '@' и берем первую часть
               const username = value.split('@')[0];
               setFormData(prevState => ({ ...prevState, username: username, [name]: value }));
-            } else {
+            }
+            else if (name === 'NamePosition') {
+               
+                    const regex = new RegExp(value, 'i');
+                    const idPosition = position.results.filter(item => regex.test(item.name)).map(item => item.id)[0];
+                    console.log(idPosition);
+                    setFormData(prevState => ({ ...prevState, position: idPosition}))
+                    setPositionName(value)
+                
+               
+            }
+            
+            else {
               setFormData(prevState => ({ ...prevState, [name]: value }));
             }
          };
@@ -59,7 +77,19 @@ const style = {
             setTotalPages(Math.ceil(response.count / 5));
             setLoading(false);
             
-            // Расчет общего количества страниц
+
+        
+        
+        }
+        const GetPotihions = async () => {
+
+            setLoading(true);
+            const response = await httpApiMethods.GetPotihions();
+            setPosition(response);
+            console.log(response);
+            setLoading(false);
+            
+
         
         
         }
@@ -68,28 +98,40 @@ const style = {
             setLoading(true);
             event.preventDefault();
             const response = await httpApiMethods.SetNewUser(formData);
-            setLoading(false)
-            // Обработка ответа сервера
+            setFormData({
+                username : '',
+                first_name: '',
+                last_name: '',
+                position: '',
+                email: '',
+                birth_date: ''})
+            setOpen(false);
+            setLoading(false);
+
         };
+        const handlePositionChange = (event) => {
+            setIdPosition(event.target.value);
+            setFormData(prevState => ({ ...prevState, position: event.target.value }));
+        };
+       
         const handlePageChange = (event, value) => {
-            const offset = (value - 1) * 5; // Предполагается, что на странице отображается 3 пользователя
+            const offset = (value - 1) * 5; 
             GetUsersAdmin(5, offset);
+            setPage(value)
+           
            };
             
         useEffect(() => {
-    
-            GetUsersAdmin(5, 0)
+            if (localStorage.getItem('token')) {
+                GetUsersAdmin(5, 0)
+                GetPotihions()
+            }
+            
+            
           
         
         }, [])
-        // useEffect(() => {
-        //     if (users) {
-        //         console.log(users)
-        //         GetUsersAdmin(2, 0)
-        //         console.log(users)
-        //     }
         
-        // }, [users])
     const changeRole = (event) => {
         setUserRole(event.target.value)
     }
@@ -126,12 +168,12 @@ const style = {
                             <div style={{width: '100%'}} key={index}>
                                 <div onClick={() => navigate(`/profile/${user.id}`)}  className={styles.profile__user_container}>
                                     <div className={styles.profile__user_img_container}>
-                                        <img src={user.avatar} className={styles.profile__user_img} alt="User avatar" />
-                                        <div className={styles.profile__user_role}>Администратор</div>
+                                        <img src={user.avatar ? `${user.avatar}` : Pedro} className={styles.profile__user_img} alt="User avatar" />
+                                        <div className={styles.profile__user_role}>{user.groups[0] ? user.groups[0].name : 'Пользователь'}</div>
                                     </div>
-                                    <div className={styles.profile__user_info_about_container}>
+                                    <div className={styles.profile__user_info_about_container_name}>
                                         <div className={styles.profile__user_fullName}><span>{user.last_name[0]}</span>{user.last_name.slice(1)} {user.first_name}</div>
-                                        <div className={styles.profile__user_spaciality}>{user.position}</div>
+                                        {user.position && <div className={styles.profile__user_spaciality}>{user.position.name}</div>}
                                     </div>
                                     <div className={styles.profile__user_info_container}>
                                         <div className={styles.profile__user_email}>{user.email}</div>
@@ -151,7 +193,7 @@ const style = {
                             
                         ))}
                         <Stack sx={{justifyContent: 'center', alignItems: 'center', width: '100%'}} spacing={2}>
-                            <Pagination count={totalPages} onChange={handlePageChange} />
+                            <Pagination page={page} count={totalPages} onChange={handlePageChange} />
                         </Stack>
                        </> : <div className={styles.loading__img_container}><img className={styles.loading__img} src={loadingGif} alt='loading'></img></div>}
                         
@@ -187,23 +229,17 @@ const style = {
                                     value={formData.last_name}
                                     onChange={handleInputChange}
                                     />
-                                    {/* <input
-                                    name="position"
-                                    placeholder='Должность'
-                                    className={styles.addModal_user}
-                                    value={formData.position}
-                                    onChange={handleInputChange}
-                                    /> */}
-                                    {/* <select
-                                    name="role"
+                                    
+                                    <select
+                                    name="NamePosition"
                                     className={styles.addModal_user_select}
-                                    value={formData.role}
-                                    onChange={handleInputChange}
+                                    value={idPosition}
+                                    onChange={handlePositionChange}
                                     >
-                                    <option value="">Выберите роль</option>
-                                    <option value="Admin">Администратор</option>
-                                    <option value="User">Пользователь</option>
-                                    </select> */}
+                                    {idPosition === '' && <option value="">Выберите роль</option>}
+                                    <option value="1">Младший разработчик</option>
+                                    <option value="2">Старший разработчик</option>
+                                    </select>
                                     <input
                                     name="email"
                                     placeholder='Почта'
