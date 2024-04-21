@@ -99,7 +99,7 @@ const ProfilePage = () => {
             {user && !loading ? <section className={styles.profile__container}>
                 <div className={styles.profile__user_container}>
                     <div className={styles.profile__user_img_container}>
-                        <img src={avatar} className={styles.profile__user_img}></img>
+                        <img src={user.avatar ? user.avatar : avatar} className={styles.profile__user_img}></img>
                         {user.groups.name ? <div className={styles.profile__user_role}>{user.groups[0].name}</div> : <div className={styles.profile__user_role}>Пользователь</div>}
                         
                     </div>

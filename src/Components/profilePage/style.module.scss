@@ -17,6 +17,8 @@
     }
     &__user {
         &_img {
+            width: 200px;
+
             &_container {
                 display: flex;
                 flex-direction: column;
